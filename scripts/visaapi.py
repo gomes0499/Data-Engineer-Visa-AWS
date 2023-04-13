@@ -1,23 +1,19 @@
 import json
+import configparser
 from faker import Faker
-from confluent_kafka import Producer
+import boto3
+import time
+
 
 fake = Faker()
+config = configparser.ConfigParser()
+config.read("/Users/gomes/Desktop/Projects/Data Engineer/8-Project/config/config.ini")
 
+# Kinesis configuration
+KINESIS_STREAM_NAME = config.get("kinesis", "KINESIS_STREAM_NAME")
 
-# Kafka configuration
-KAFKA_BOOTSTRAP_SERVERS = "your_kafka_bootstrap_servers"
-KAFKA_TOPIC = "your_kafka_topic"
-
-# Initialize the Kafka producer
-producer_conf = {"bootstrap.servers": KAFKA_BOOTSTRAP_SERVERS}
-producer = Producer(producer_conf)
-
-def kafka_producer_on_delivery(err, msg):
-    if err is not None:
-        print(f"Failed to deliver message: {err}")
-    else:
-        print(f"Produced message to {msg.topic()} [{msg.partition()}] @ {msg.offset()}")
+# Initialize the Kinesis client
+kinesis_client = boto3.client("kinesis")
 
 def generate_transaction():
     transaction = {
@@ -40,8 +36,14 @@ def generate_transactions(num_transactions=1):
 def produce_transactions(num_transactions=1):
     transactions = generate_transactions(num_transactions)
     for transaction in transactions:
-        producer.produce(KAFKA_TOPIC, key=transaction["transaction_id"], value=json.dumps(transaction), callback=kafka_producer_on_delivery)
-    producer.flush()
+        response = kinesis_client.put_record(
+            StreamName=KINESIS_STREAM_NAME,
+            Data=json.dumps(transaction),
+            PartitionKey=transaction["transaction_id"],
+        )
+        print(f"PutRecord response: {response}")
 
 if __name__ == "__main__":
-    produce_transactions()
+    while True:
+        produce_transactions(1)
+        time.sleep(1)

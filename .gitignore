@@ -5,3 +5,4 @@ terraform.tfstate
 .terraform.lock.hcl
 logs
 Project-8-Agile-Development.pdf
+notes.tf

@@ -62,8 +62,6 @@ resource "aws_ecs_task_definition" "airflow" {
   ])
 }
 
-
-
 resource "aws_ecs_service" "airflow" {
   name            = "airflow"
   cluster         = aws_ecs_cluster.airflow_cluster.id
@@ -78,7 +76,6 @@ resource "aws_ecs_service" "airflow" {
     assign_public_ip = true
   }
 }
-
 
 resource "aws_iam_role" "ecs_execution_role" {
   name = "ecs_execution_role"
