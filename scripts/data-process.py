@@ -3,7 +3,7 @@ from pyspark.sql.types import StructType, StructField, StringType, FloatType, Ti
 
 def main():
     spark = SparkSession.builder \
-        .appName("JSON to Parquet Converter") \
+        .appName("JSON to Parquet Converter with Data Quality Checks") \
         .getOrCreate()
 
     # Define input and output paths
@@ -29,8 +29,15 @@ def main():
       .option("recursiveFileLookup", "true")  # Read from all subdirectories
       .load(f"s3://{raw_bucket}/"))
 
+    # Perform data quality checks
+    # Check if the values in the "transaction_id" column are not null
+    df = df.filter(df.transaction_id.isNotNull())
+
+    # Check if the values in the "amount" column are between 0 and 1000
+    df = df.filter((df.amount >= 0) & (df.amount <= 1000))
+
     # Write data to Parquet format in the processed bucket
-    df.write \
+    df.coalesce(1).write \
         .format("parquet") \
         .mode("overwrite") \
         .save(output_path)

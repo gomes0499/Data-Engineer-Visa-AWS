@@ -38,7 +38,7 @@ def produce_transactions(num_transactions=1):
     for transaction in transactions:
         response = kinesis_client.put_record(
             StreamName=KINESIS_STREAM_NAME,
-            Data=json.dumps(transaction),
+            Data=json.dumps(transaction) + '\n',
             PartitionKey=transaction["transaction_id"],
         )
         print(f"PutRecord response: {response}")
