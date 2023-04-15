@@ -1,0 +1,8 @@
+.DS_Store
+.terraform
+config
+terraform.tfstate
+.terraform.lock.hcl
+logs
+8-Project-Agile-Development.pdf
+dummy-data.py
