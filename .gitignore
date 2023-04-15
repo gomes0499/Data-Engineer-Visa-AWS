@@ -4,5 +4,5 @@ config
 terraform.tfstate
 .terraform.lock.hcl
 logs
-Project-8-Agile-Development.pdf
-notes.tf
+8-Project-Agile-Development.pdf
+dummy-data.py
