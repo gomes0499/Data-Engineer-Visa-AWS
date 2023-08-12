@@ -19,7 +19,7 @@ The problem domain involves ingesting, processing, and analyzing transactional d
 
 ### Pipeline Diagram
 
-![alt text](https://github.com/gomes0499/Data-Engineer-Visa-AWS/blob/main/8.DataPipeline.png)
+![alt text](https://github.com/gomes0499/Data-Engineer-Visa-AWS/blob/main/Visa.png)
 
 ### Tools
 
